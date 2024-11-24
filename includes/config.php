@@ -12,14 +12,14 @@ define('DATABASE_PASS', '');
 define('COMPANY_LOGO', 'images/logo.png');
 define('COMPANY_LOGO_WIDTH', '300');
 define('COMPANY_LOGO_HEIGHT', '90');
-define('COMPANY_NAME','Invoice Mg System');
-define('COMPANY_ADDRESS_1','123 Something Street');
-define('COMPANY_ADDRESS_2','Collierville, 3590 Lords Way');
-define('COMPANY_ADDRESS_3','Paekinta');
-define('COMPANY_COUNTY','US');
-define('COMPANY_POSTCODE','10100');
+define('COMPANY_NAME','sandeep singh');
+define('COMPANY_ADDRESS_1','jhald jamnikhal');
+define('COMPANY_ADDRESS_2','tehri garwhal');
+define('COMPANY_ADDRESS_3','india');
+define('COMPANY_COUNTY','IN');
+define('COMPANY_POSTCODE','201301');
 
-define('COMPANY_NUMBER','Company No: 699400000'); // Company registration number
+define('COMPANY_NUMBER','Company No: 8979880-179'); // Company registration number
 define('COMPANY_VAT', 'Company VAT: 690000007'); // Company TAX/VAT number
 
 // EMAIL DETAILS
