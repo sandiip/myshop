@@ -101,7 +101,7 @@ include('functions.php');
 								    	<input type="text" class="form-control margin-bottom copy-input required" name="customer_county" id="customer_county" placeholder="Country" tabindex="6">
 								    </div>
 								    <div class="form-group no-margin-bottom">
-								    	<input type="text" class="form-control required" name="customer_phone" id="customer_phone" placeholder="Phone Number" tabindex="8">
+								    	<input type="text" class="form-control required" name="customer_phone" id="customer_phone" placeholder="Phone Number" tabindex="8" maxlength="10">
 									</div>
 								</div>
 							</div>
@@ -123,7 +123,7 @@ include('functions.php');
 										<input type="text" class="form-control margin-bottom" name="customer_address_2_ship" id="customer_address_2_ship" placeholder="Address 2" tabindex="11">	
 									</div>
 									<div class="form-group no-margin-bottom">
-										<input type="text" class="form-control required" name="customer_county_ship" id="customer_county_ship" placeholder="Country" tabindex="13">
+										<input type="text" class="form-control required" name="customer_county_ship" id="customer_county_ship" value="India" placeholder="Country" tabindex="13">
 									</div>
 								</div>
 								<div class="col-xs-6">
@@ -149,13 +149,13 @@ include('functions.php');
 						<th width="500">
 							<h4><a href="#" class="btn btn-success btn-xs add-row"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a> Product</h4>
 						</th>
-						<th>
+						<th width="150">
 							<h4>Qty</h4>
 						</th>
-						<th>
+						<th width="200">
 							<h4>Price</h4>
 						</th>
-						<th width="300">
+						<th width="150">
 							<h4>Discount</h4>
 						</th>
 						<th>

@@ -297,7 +297,7 @@ $mysqli->close();
 			<div id="invoice_totals" class="padding-right row text-right">
 				<div class="col-xs-6">
 					<div class="input-group form-group-sm textarea no-margin-bottom">
-						<textarea class-"form-control" name="invoice_notes" placeholder="Please enter any order notes here."><?php echo $invoice_notes; ?></textarea>
+						<textarea class="form-control" name="invoice_notes" placeholder="Please enter any order notes here."><?php echo $invoice_notes; ?></textarea>
 					</div>
 				</div>
 				<div class="col-xs-6 no-padding-right">
