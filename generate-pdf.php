@@ -31,40 +31,46 @@ if (isset($_GET['id'])) {
         // Generate PDF content
         $html = '<style>
                     body { font-family: Arial, sans-serif; color: #333; font-size: 12px; margin: 0; padding: 0; }
-                    .header { text-align: center; padding: 20px; background-color: #f8f9fa; border-bottom: 1px solid #ddd; }
-                    .header h1 { margin: 0; font-size: 24px; color: #007bff; }
-                    .invoice-details, .customer-details { margin: 20px; }
-                    .invoice-details table, .customer-details table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                    .invoice-details th, .customer-details th { text-align: left; padding: 8px; background-color: #f2f2f2; }
-                    .invoice-details td, .customer-details td { padding: 8px; border: 1px solid #ddd; }
+                    .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f8f9fa; border-bottom: 2px solid #007bff; }
+                    .header .logo { font-size: 24px; font-weight: bold; color: #007bff; }
+                    .header .logo img { max-height: 50px; }
+                    .header .invoice-title { font-size: 28px; font-weight: bold; color: #333; }
+                    .details-container { display: flex; justify-content: space-between; margin: 20px; }
+                    .details-section { width: 48%; }
+                    .details-section h3 { margin-bottom: 10px; font-size: 18px; color: #007bff; }
+                    .details-section table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    .details-section th, .details-section td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+                    .details-section th { background-color: #f2f2f2; }
                     .items-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
                     .items-table th, .items-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-                    .items-table th { background-color: #f2f2f2; }
+                    .items-table th { background-color: #007bff; color: #fff; }
                     .total-row { font-weight: bold; background-color: #f9f9f9; }
                     .footer { text-align: center; margin-top: 20px; font-size: 10px; color: #666; }
                 </style>';
 
         $html .= '<div class="header">
-                    <h1>Invoice</h1>
+                    <div class="logo">
+                        <img src="https://via.placeholder.com/150x50?text=LOGO" alt="Company Logo">
+                    </div>
                   </div>';
 
-        $html .= '<div class="customer-details">
-                    <h3>Customer Details</h3>
-                    <table>
-                        <tr><th>Name:</th><td>'.$invoice['customer_name'].'</td></tr>
-                        <tr><th>Email:</th><td>'.$invoice['customer_email'].'</td></tr>
-                        <tr><th>Phone:</th><td>'.$invoice['customer_phone'].'</td></tr>
-                    </table>
-                  </div>';
-
-        $html .= '<div class="invoice-details">
-                    <h3>Invoice Details</h3>
-                    <table>
-                        <tr><th>Invoice Number:</th><td>'.$invoice['invoice'].'</td></tr>
-                        <tr><th>Issue Date:</th><td>'.$invoice['invoice_date'].'</td></tr>
-                        <tr><th>Due Date:</th><td>'.$invoice['invoice_due_date'].'</td></tr>
-                        <tr><th>Status:</th><td>'.($invoice['status'] == 'paid' ? 'Paid' : 'Unpaid').'</td></tr>
-                    </table>
+        $html .= '<div class="details-container">
+                    <div class="details-section">
+                        <h3>Customer Details</h3>
+                        <table>
+                            <tr><th>Name:</th><td>'.$invoice['customer_name'].'</td></tr>
+                            <tr><th>Email:</th><td>'.$invoice['customer_email'].'</td></tr>
+                            <tr><th>Phone:</th><td>'.$invoice['customer_phone'].'</td></tr>
+                        </table>
+                    </div>
+                    <div class="details-section">
+                        <h3>Invoice Details</h3>
+                        <table>
+                            <tr><th>Invoice Number:</th><td>#'. $invoice['invoice'] . '</td></tr>
+                            <tr><th>Invoice Date:</th><td>'.$invoice['invoice_date'].'</td></tr> 
+                            <tr><th>Status:</th><td>'.($invoice['status'] == 'paid' ? 'Paid' : 'Unpaid').'</td></tr>
+                        </table>
+                    </div>
                   </div>';
 
         $html .= '<h3 style="margin: 20px;">Invoice Items</h3>';
