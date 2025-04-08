@@ -54,33 +54,32 @@ if (isset($_GET['id'])) {
                     </div>
                   </div>';
 
-        $html .= '<div class="details-container">
-                    <div class="details-section">
-                        <h3>Customer Details</h3>
-                        <table>
-                            <tr><th>Name:</th><td>'.$invoice['customer_name'].'</td></tr>
-                            <tr><th>Email:</th><td>'.$invoice['customer_email'].'</td></tr>
-                            <tr><th>Phone:</th><td>'.$invoice['customer_phone'].'</td></tr>
-                        </table>
-                    </div>
-                    <div class="details-section">
-                        <h3>Invoice Details</h3>
-                        <table>
-                            <tr><th>Invoice Number:</th><td>#'. $invoice['invoice'] . '</td></tr>
-                            <tr><th>Invoice Date:</th><td>'.$invoice['invoice_date'].'</td></tr> 
-                            <tr><th>Status:</th><td>'.($invoice['status'] == 'paid' ? 'Paid' : 'Unpaid').'</td></tr>
-                        </table>
-                    </div>
-                  </div>';
+        $html .= '<div class="details-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                <div class="details-section" style="flex: 1;">
+                <h3>Customer Details</h3>
+                <table>
+                    <tr><th>Name:</th><td>'.$invoice['customer_name'].'</td></tr>
+                    <tr><th>Email:</th><td>'.$invoice['customer_email'].'</td></tr>
+                    <tr><th>Phone:</th><td>'.$invoice['customer_phone'].'</td></tr>
+                </table>
+                </div>
+                <div class="details-section" style="flex: 1;">
+                <h3>Invoice Details</h3>
+                <table>
+                    <tr><th>Invoice Number:</th><td>#'. $invoice['invoice'] . '</td></tr>
+                    <tr><th>Invoice Date:</th><td>'.$invoice['invoice_date'].'</td></tr> 
+                    <tr><th>Status:</th><td>'.($invoice['status'] == 'paid' ? 'Paid' : 'Unpaid').'</td></tr>
+                </table>
+                </div>
+              </div>';
 
         $html .= '<h3 style="margin: 20px;">Invoice Items</h3>';
         $html .= '<table class="items-table">
                     <thead>
-                        <tr>
-                            <th>Item</th>
+                        <tr> 
                             <th>Description</th>
                             <th>Quantity</th>
-                            <th>Price</th>
+                            <th>Rate</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -96,12 +95,11 @@ if (isset($_GET['id'])) {
                 $itemTotal = $item['quantity'] * $item['price'];
                 $grandTotal += $itemTotal;
 
-                $html .= '<tr>
-                            <td>'.$item['item_name'].'</td>
-                            <td>'.$item['item_description'].'</td>
-                            <td>'.$item['quantity'].'</td>
-                            <td>$'.$item['price'].'</td>
-                            <td>$'.$itemTotal.'</td>
+                $html .= '<tr> 
+                            <td>'.$item['product'].'</td>
+                            <td>'.$item['qty'].'</td>
+                            <td>'.$item['price'].'.00</td>
+                            <td>'.$item['subtotal'].'</td>
                           </tr>';
             }
         } else {
@@ -109,8 +107,8 @@ if (isset($_GET['id'])) {
         }
 
         $html .= '<tr class="total-row">
-                    <td colspan="4" style="text-align: right;">Grand Total:</td>
-                    <td>$'.$grandTotal.'</td>
+                    <td colspan="3" style="text-align: right;">Grand Total:</td>
+                    <td>$'.$invoice['subtotal'].'.00</td>
                   </tr>';
 
         $html .= '</tbody></table>';
@@ -127,7 +125,7 @@ if (isset($_GET['id'])) {
 
         // Save the PDF to a temporary file
         $output = $dompdf->output();
-        $filePath = 'temp/invoice_'.$invoiceId.'.pdf';
+        $filePath = 'temp/'.$invoice['customer_name'].'-'.date('Y-m-d').'-'.$invoiceId.'.pdf';
 
         if (!file_exists('temp')) {
             mkdir('temp', 0777, true); // Create the temp directory if it doesn't exist
