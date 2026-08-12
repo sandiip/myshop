@@ -243,3 +243,96 @@ strong.shipping {
 .login-form {
   margin-top: 100px;
 }
+
+/* Invoice Table Styling */
+#invoices-table {
+  margin-top: 15px;
+}
+
+#invoices-table thead th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+  padding: 12px;
+  text-align: left;
+  font-size: 13px;
+}
+
+#invoices-table tbody td {
+  padding: 12px;
+  vertical-align: middle;
+  font-size: 13px;
+}
+
+#invoices-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+#invoices-table td strong {
+  color: #333;
+}
+
+.label {
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.label-success {
+  background-color: #10b981;
+  color: white;
+}
+
+.label-warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.label-primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Action Buttons */
+.btn-xs {
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-right: 3px;
+  transition: all 0.2s ease;
+  text-decoration: none !important;
+}
+
+.btn-xs:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-xs i {
+  margin-right: 0;
+}
+
+.btn-info {
+  background-color: #0ea5e9;
+  border-color: #0ea5e9;
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: #0284c7;
+  border-color: #0284c7;
+}
+
+.btn-success {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #059669;
+  border-color: #059669;
+}

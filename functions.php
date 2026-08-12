@@ -93,6 +93,217 @@ function getInvoices() {
 
 }
 
+// Get all invoices - flat list view
+function getInvoicesTable() {
+
+	$mysqli = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASS, DATABASE_NAME);
+	if ($mysqli->connect_error) {
+		die('Error : ('.$mysqli->connect_errno .') '. $mysqli->connect_error);
+	}
+
+	$query = "SELECT i.*, c.name, c.phone, c.email
+	          FROM invoices i
+	          JOIN customers c ON c.invoice = i.invoice
+	          ORDER BY STR_TO_DATE(i.invoice_date, '%d/%m/%Y') DESC, i.invoice DESC";
+
+	$results = $mysqli->query($query);
+	if (!$results) {
+		echo '<p>Unable to load invoices.</p>';
+		$mysqli->close();
+		return;
+	}
+
+	if ($results->num_rows == 0) {
+		echo '<p>No invoices found.</p>';
+		$results->free();
+		$mysqli->close();
+		return;
+	}
+
+	echo '<table class="table table-striped table-hover table-bordered" id="invoices-table">';
+	echo '<thead><tr>';
+	echo '<th>Invoice</th>';
+	echo '<th>Date</th>';
+	echo '<th>Due Date</th>';
+	echo '<th>Type</th>';
+	echo '<th>Total</th>';
+	echo '<th>Status</th>';
+	echo '<th>Actions</th>';
+	echo '</tr></thead><tbody>';
+
+	while ($row = $results->fetch_assoc()) {
+		$invId = htmlspecialchars($row['invoice']);
+		$invDate = htmlspecialchars($row['invoice_date']);
+		$dueDate = htmlspecialchars($row['invoice_due_date']);
+		$invType = htmlspecialchars($row['invoice_type']);
+		$total = number_format(floatval($row['total']), 2);
+		$status = htmlspecialchars($row['status']);
+		$statusClass = ($status === 'paid') ? 'label-success' : 'label-warning';
+		$customerName = htmlspecialchars($row['name']);
+		$phone = htmlspecialchars($row['phone']);
+		$email = htmlspecialchars($row['email']);
+
+		echo '<tr>';
+		echo '<td><strong>' . $invId . '</strong></td>';
+		echo '<td>' . $invDate . '</td>';
+		echo '<td>' . $dueDate . '</td>';
+		echo '<td>' . ucfirst($invType) . '</td>';
+		echo '<td><strong>' . CURRENCY . $total . '</strong></td>';
+		echo '<td><span class="label ' . $statusClass . '">' . ucfirst($status) . '</span></td>';
+		echo '<td>';
+		echo '<a href="invoice-edit.php?id=' . $invId . '" class="btn btn-info btn-xs" title="View Invoice"><i class="fa fa-eye"></i></a> ';
+		echo '<a href="generate-pdf.php?id=' . $invId . '" class="btn btn-primary btn-xs" title="Download PDF"><i class="fa fa-download"></i></a> ';
+		echo '<a href="https://wa.me/' . preg_replace('/[^0-9]/', '', $phone) . '?text=Invoice%20' . $invId . '%20for%20%24' . str_replace('.', '', $total) . '" target="_blank" class="btn btn-success btn-xs" title="Share on WhatsApp"><i class="fa fa-whatsapp"></i></a> ';
+		echo '<a href="#" data-invoice-id="' . $invId . '" class="btn btn-danger btn-xs delete-invoice" title="Delete Invoice"><i class="fa fa-trash"></i></a>';
+		echo '</td>';
+		echo '</tr>';
+	}
+
+	echo '</tbody></table>';
+	$results->free();
+	$mysqli->close();
+}
+
+// Get invoice summary by customer phone (grouped view)
+function getInvoiceSummaryTable() {
+
+	$mysqli = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASS, DATABASE_NAME);
+	if ($mysqli->connect_error) {
+		die('Error : ('.$mysqli->connect_errno .') '. $mysqli->connect_error);
+	}
+
+	// First, get the summary: customer name, phone, total bills count
+	$query = "SELECT c.name, c.phone, COUNT(i.invoice) as total_bills
+	          FROM invoices i
+	          JOIN customers c ON c.invoice = i.invoice
+	          GROUP BY c.phone, c.name
+	          ORDER BY c.name, c.phone";
+
+	$results = $mysqli->query($query);
+	if (!$results) {
+		echo '<p>Unable to load invoices.</p>';
+		$mysqli->close();
+		return;
+	}
+
+	if ($results->num_rows == 0) {
+		echo '<p>No invoices found.</p>';
+		$results->free();
+		$mysqli->close();
+		return;
+	}
+
+	echo '<table class="table table-striped table-hover table-bordered" id="summary-table">';
+	echo '<thead><tr>';
+	echo '<th>Customer Name</th>';
+	echo '<th>Mobile Number</th>';
+	echo '<th>Total Bills</th>';
+	echo '<th>Last Bill Amount</th>';
+	echo '</tr></thead><tbody>';
+
+	while ($row = $results->fetch_assoc()) {
+		$phone = htmlspecialchars($row['phone'] ?: 'N/A');
+		$name = htmlspecialchars($row['name']);
+		$total = intval($row['total_bills']);
+
+		// Get last bill amount for this phone
+		$lastBillQuery = "SELECT total FROM invoices i
+		                  JOIN customers c ON c.invoice = i.invoice
+		                  WHERE c.phone = ?
+		                  ORDER BY STR_TO_DATE(i.invoice_date, '%d/%m/%Y') DESC, i.invoice DESC
+		                  LIMIT 1";
+
+		$stmt = $mysqli->prepare($lastBillQuery);
+		$stmt->bind_param('s', $row['phone']);
+		$stmt->execute();
+		$billResult = $stmt->get_result();
+		$billRow = $billResult->fetch_assoc();
+		$lastAmount = $billRow ? floatval($billRow['total']) : 0;
+		$lastAmountFormatted = number_format($lastAmount, 2);
+		$stmt->close();
+
+		echo '<tr class="invoice-summary-row" data-phone="' . $phone . '" data-customer-name="' . $name . '">';
+		echo '<td>' . $name . '</td>';
+		echo '<td>' . $phone . '</td>';
+		echo '<td><a href="#" class="expand-bills" data-phone="' . $phone . '" data-toggle="modal" data-target="#billsModal">' . $total . '</a></td>';
+		echo '<td>' . CURRENCY . $lastAmountFormatted . '</td>';
+		echo '</tr>';
+	}
+
+	echo '</tbody></table>';
+	$results->free();
+	$mysqli->close();
+}
+
+// Get all invoices for a specific customer phone (for modal)
+function getInvoicesByPhone($phone) {
+	$mysqli = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASS, DATABASE_NAME);
+	if ($mysqli->connect_error) {
+		die('Error : ('.$mysqli->connect_errno .') '. $mysqli->connect_error);
+	}
+
+	$query = "SELECT i.*, c.name, c.phone
+	          FROM invoices i
+	          JOIN customers c ON c.invoice = i.invoice
+	          WHERE c.phone = ?
+	          ORDER BY STR_TO_DATE(i.invoice_date, '%d/%m/%Y') DESC, i.invoice DESC";
+
+	$stmt = $mysqli->prepare($query);
+	$stmt->bind_param('s', $phone);
+	$stmt->execute();
+	$results = $stmt->get_result();
+
+	if ($results->num_rows == 0) {
+		echo '<p>No invoices found for this customer.</p>';
+		$results->free();
+		$stmt->close();
+		$mysqli->close();
+		return;
+	}
+
+	echo '<table class="table table-striped table-hover table-bordered" id="modal-invoices-table">';
+	echo '<thead><tr>';
+	echo '<th>Invoice</th>';
+	echo '<th>Date</th>';
+	echo '<th>Due Date</th>';
+	echo '<th>Type</th>';
+	echo '<th>Total</th>';
+	echo '<th>Status</th>';
+	echo '<th>Actions</th>';
+	echo '</tr></thead><tbody>';
+
+	while ($row = $results->fetch_assoc()) {
+		$invId = htmlspecialchars($row['invoice']);
+		$invDate = htmlspecialchars($row['invoice_date']);
+		$dueDate = htmlspecialchars($row['invoice_due_date']);
+		$invType = htmlspecialchars($row['invoice_type']);
+		$total = number_format(floatval($row['total']), 2);
+		$status = htmlspecialchars($row['status']);
+		$statusClass = ($status === 'paid') ? 'label-success' : 'label-warning';
+		$customerPhone = htmlspecialchars($row['phone']);
+
+		echo '<tr>';
+		echo '<td><strong>' . $invId . '</strong></td>';
+		echo '<td>' . $invDate . '</td>';
+		echo '<td>' . $dueDate . '</td>';
+		echo '<td>' . ucfirst($invType) . '</td>';
+		echo '<td><strong>' . CURRENCY . $total . '</strong></td>';
+		echo '<td><span class="label ' . $statusClass . '">' . ucfirst($status) . '</span></td>';
+		echo '<td>';
+		echo '<a href="invoice-edit.php?id=' . $invId . '" class="btn btn-info btn-xs" title="View Invoice"><i class="fa fa-eye"></i></a> ';
+		echo '<a href="generate-pdf.php?id=' . $invId . '" class="btn btn-primary btn-xs" title="Download PDF"><i class="fa fa-download"></i></a> ';
+		echo '<a href="https://wa.me/' . preg_replace('/[^0-9]/', '', $customerPhone) . '?text=Invoice%20' . $invId . '%20for%20%24' . str_replace('.', '', $total) . '" target="_blank" class="btn btn-success btn-xs" title="Share on WhatsApp"><i class="fa fa-whatsapp"></i></a> ';
+		echo '<a href="#" data-invoice-id="' . $invId . '" class="btn btn-danger btn-xs delete-invoice" title="Delete Invoice"><i class="fa fa-trash"></i></a>';
+		echo '</td>';
+		echo '</tr>';
+	}
+
+	echo '</tbody></table>';
+	$results->free();
+	$stmt->close();
+	$mysqli->close();
+}
+
 // Initial invoice number
 function getInvoiceId() {
 
