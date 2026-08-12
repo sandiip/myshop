@@ -50,7 +50,7 @@ if (isset($_GET['id'])) {
 
         $html .= '<div class="header">
                     <div class="logo">
-                        <img src="https://via.placeholder.com/150x50?text=LOGO" alt="Company Logo">
+                        <img src="https://via.placeholder.com/150x50?text=LOGO" alt="Company sa Logo">
                     </div>
                   </div>';
 
@@ -58,8 +58,7 @@ if (isset($_GET['id'])) {
                 <div class="details-section" style="flex: 1;">
                 <h3>Customer Details</h3>
                 <table>
-                    <tr><th>Name:</th><td>'.$invoice['customer_name'].'</td></tr>
-                    <tr><th>Email:</th><td>'.$invoice['customer_email'].'</td></tr>
+                    <tr><th>Name:</th><td>'.$invoice['customer_name'].'</td></tr> 
                     <tr><th>Phone:</th><td>'.$invoice['customer_phone'].'</td></tr>
                 </table>
                 </div>
