@@ -5,7 +5,7 @@ include('functions.php');
 
 ?>
 
-		<h2>Create New <span class="invoice_type">Invoice</span> </h2>
+
 		<!-- <hr> -->
 
 		<div id="response" class="alert alert-success" style="display:none;">
@@ -15,31 +15,28 @@ include('functions.php');
 
 		<form method="post" id="create_invoice">
 			<input type="hidden" name="action" value="create_invoice">
-			
-			<div class="row">
-				<div class="col-xs-4">
-				
-				</div>
-				<div class="col-xs-8 text-right">
-					<div class="row">
-						<div class="col-xs-6">
-							<h2 class="">Select Type:</h2>
-						</div>
-						<div class="col-xs-3">
+
+
+				<div class="row">
+					<div class="col-xs-2">
+						 <div class="form-group">
 							<select name="invoice_type" id="invoice_type" class="form-control">
-								<option value="invoice" selected>Invoice</option>
-								<option value="quote">Quote</option>
-								<option value="receipt">Receipt</option>
-							</select>
-						</div>
-						<div class="col-xs-3">
+							<option value="invoice" selected>Invoice</option>
+							<option value="quote">Quote</option>
+							<option value="receipt">Receipt</option>
+						</select>
+						 </div>
+
+					</div>
+					<div class="col-xs-2">
+						<div class="form-group">
 							<select name="invoice_status" id="invoice_status" class="form-control">
-								<option value="open" selected>Open</option>
-								<option value="paid">Paid</option>
-							</select>
+							<option value="open" selected>Open</option>
+							<option value="paid">Paid</option>
+						</select>
 						</div>
 					</div>
-					<div class="col-xs-4 no-padding-right">
+					<div class="col-xs-2">
 				        <div class="form-group">
 				            <div class="input-group date" id="invoice_date">
 				                <input type="text" class="form-control required" name="invoice_date" placeholder="Invoice Date" data-date-format="<?php echo DATE_FORMAT ?>" />
@@ -49,7 +46,7 @@ include('functions.php');
 				            </div>
 				        </div>
 				    </div>
-				    <div class="col-xs-4">
+				    <div class="col-xs-2">
 				        <div class="form-group">
 				            <div class="input-group date" id="invoice_due_date">
 				                <input type="text" class="form-control required" name="invoice_due_date" placeholder="Due Date" data-date-format="<?php echo DATE_FORMAT ?>" />
@@ -59,11 +56,10 @@ include('functions.php');
 				            </div>
 				        </div>
 				    </div>
-					<div class="input-group col-xs-4 float-right">
+					<div class="input-group col-xs-3 float-right">
 						<span class="input-group-addon">#<?php echo INVOICE_PREFIX ?></span>
 						<input type="text" name="invoice_id" id="invoice_id" class="form-control required" placeholder="Invoice Number" aria-describedby="sizing-addon1" value="<?php getInvoiceId(); ?>">
 					</div>
-				</div>
 			</div>
 			<div class="row">
 				<div class="col-xs-6">
@@ -80,13 +76,13 @@ include('functions.php');
 										<input type="text" class="form-control margin-bottom copy-input required" name="customer_name" id="customer_name" placeholder="Enter Name" tabindex="1">
 									</div>
 									<div class="form-group">
-										<input type="text" class="form-control margin-bottom copy-input required" name="customer_address_1" id="customer_address_1" placeholder="Address 1" tabindex="3">	
+										<input type="text" class="form-control margin-bottom copy-input required" name="customer_address_1" id="customer_address_1" placeholder="Address 1" tabindex="3">
 									</div>
 									<div class="form-group">
-										<input type="text" class="form-control margin-bottom copy-input required" name="customer_town" id="customer_town" placeholder="Town" tabindex="5">		
+										<input type="text" class="form-control margin-bottom copy-input required" name="customer_town" id="customer_town" placeholder="Town" tabindex="5">
 									</div>
 									<div class="form-group no-margin-bottom">
-										<input type="text" class="form-control copy-input required" name="customer_postcode" id="customer_postcode" placeholder="Postcode" tabindex="7">					
+										<input type="text" class="form-control copy-input required" name="customer_postcode" id="customer_postcode" placeholder="Postcode" tabindex="7">
 									</div>
 								</div>
 								<div class="col-xs-6">
@@ -120,7 +116,7 @@ include('functions.php');
 										<input type="text" class="form-control margin-bottom required" name="customer_name_ship" id="customer_name_ship" placeholder="Enter Name" tabindex="9">
 									</div>
 									<div class="form-group">
-										<input type="text" class="form-control margin-bottom" name="customer_address_2_ship" id="customer_address_2_ship" placeholder="Address 2" tabindex="11">	
+										<input type="text" class="form-control margin-bottom" name="customer_address_2_ship" id="customer_address_2_ship" placeholder="Address 2" tabindex="11">
 									</div>
 									<div class="form-group no-margin-bottom">
 										<input type="text" class="form-control required" name="customer_county_ship" id="customer_county_ship" value="India" placeholder="Country" tabindex="13">
@@ -131,7 +127,7 @@ include('functions.php');
 								    	<input type="text" class="form-control margin-bottom required" name="customer_address_1_ship" id="customer_address_1_ship" placeholder="Address 1" tabindex="10">
 									</div>
 									<div class="form-group">
-										<input type="text" class="form-control margin-bottom required" name="customer_town_ship" id="customer_town_ship" placeholder="Town" tabindex="12">							
+										<input type="text" class="form-control margin-bottom required" name="customer_town_ship" id="customer_town_ship" placeholder="Town" tabindex="12">
 								    </div>
 								    <div class="form-group no-margin-bottom">
 								    	<input type="text" class="form-control required" name="customer_postcode_ship" id="customer_postcode_ship" placeholder="Postcode" tabindex="14">
@@ -142,26 +138,52 @@ include('functions.php');
 					</div>
 				</div>
 			</div>
+
+
 			<!-- / end client details section -->
+			<?php
+			// export products as a JS array for client-side autocomplete
+			$__products_for_js = array();
+			$mysqli = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASS, DATABASE_NAME);
+			if (!$mysqli->connect_error) {
+				$q = "SELECT product_name, product_price, product_desc FROM products ORDER BY product_name ASC";
+				$r = $mysqli->query($q);
+				if ($r) {
+					while ($row = $r->fetch_assoc()) {
+						$__products_for_js[] = array(
+							'name' => $row['product_name'],
+							'price' => $row['product_price'],
+							'desc' => $row['product_desc']
+						);
+					}
+					$r->free();
+				}
+				$mysqli->close();
+			}
+			?>
+			<script>
+			window.__products_server = <?php echo json_encode($__products_for_js); ?>;
+			</script>
 			<table class="table table-bordered table-hover table-striped" id="invoice_table">
 				<thead>
 					<tr>
 						<th width="500">
-							<h4><a href="#" class="btn btn-success btn-xs add-row"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a> Product</h4>
+							<h4>Product Name / Description</h4>
 						</th>
-						<th width="150">
+						<th width="100">
 							<h4>Qty</h4>
 						</th>
-						<th width="200">
+						<th width="150">
 							<h4>Price</h4>
 						</th>
-						<th width="150">
+						<th width="10">
 							<h4>Discount</h4>
 						</th>
-						<th>
+						<th  width="200">
 							<h4>Sub Total</h4>
 						</th>
 					</tr>
+
 				</thead>
 				<tbody>
 					<tr>
@@ -169,7 +191,7 @@ include('functions.php');
 							<div class="form-group form-group-sm  no-margin-bottom">
 								<a href="#" class="btn btn-danger btn-xs delete-row"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 								<input type="text" class="form-control form-group-sm item-input invoice_product" name="invoice_product[]" placeholder="Enter Product Name OR Description">
-								<p class="item-select">or <a href="#">select a product</a></p>
+
 							</div>
 						</td>
 						<td class="text-right">
@@ -197,16 +219,18 @@ include('functions.php');
 					</tr>
 				</tbody>
 			</table>
+			<button class="btn btn-success btn-xs add-row"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Product</button>
+
 			<div id="invoice_totals" class="padding-right row text-right">
 				<div class="col-xs-6">
 					<div class="input-group form-group-sm textarea no-margin-bottom">
 						<textarea class-"form-control" name="invoice_notes" placeholder="Additional Notes..."></textarea>
 					</div>
 
-					
+
 				</div>
 
-				
+
 				<div class="col-xs-6 no-padding-right">
 					<div class="row">
 						<div class="col-xs-4 col-xs-offset-5">
@@ -259,7 +283,7 @@ include('functions.php');
 					</div>
 				</div>
 
-		
+
 					<div class="col-xs-6">
 						<input type="email" name="custom_email" id="custom_email" class="custom_email_textarea" placeholder="Enter custom email if you wish to override the default invoice type email msg!"></input>
 					</div>
@@ -267,11 +291,11 @@ include('functions.php');
 					<div class="col-xs-6 margin-top btn-group">
 						<input type="submit" id="action_create_invoice" class="btn btn-success float-right" value="Create Invoice" data-loading-text="Creating...">
 					</div>
-			
+
 
 			</div>
 			<div class="row">
-				
+
 			</div>
 		</form>
 
@@ -280,7 +304,7 @@ include('functions.php');
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title">Select Product</h4>
+		        <h4 class="modal-title">Select Product </h4>
 		      </div>
 		      <div class="modal-body">
 				<?php popProductsList(); ?>

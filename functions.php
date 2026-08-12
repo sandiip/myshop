@@ -15,7 +15,7 @@ function getInvoices() {
 	}
 
 	// the query
-    $query = "SELECT * 
+    $query = "SELECT *
 		FROM invoices i
 		JOIN customers c
 		ON c.invoice = i.invoice
@@ -88,7 +88,7 @@ function getInvoices() {
 	// Frees the memory associated with a result
 	$results->free();
 
-	// close connection 
+	// close connection
 	$mysqli->close();
 
 }
@@ -117,16 +117,16 @@ function getInvoiceId() {
 	    if($row_cnt == 0){
 			echo INVOICE_INITIAL_VALUE;
 		} else {
-			echo $row['invoice'] + 1; 
+			echo $row['invoice'] + 1;
 		}
 
 	    // Frees the memory associated with a result
 		$result->free();
 
-		// close connection 
+		// close connection
 		$mysqli->close();
 	}
-	
+
 }
 
 // populate product dropdown for invoice creation
@@ -163,8 +163,37 @@ function popProductsList() {
 	// Frees the memory associated with a result
 	$results->free();
 
-	// close connection 
+	// close connection
 	$mysqli->close();
+
+}
+
+function getProductsJson() {
+
+	$mysqli = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASS, DATABASE_NAME);
+
+	if ($mysqli->connect_error) {
+		die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
+	}
+
+	$query = "SELECT * FROM products ORDER BY product_name ASC";
+	$results = $mysqli->query($query);
+	$products = array();
+
+	if ($results) {
+		while ($row = $results->fetch_assoc()) {
+			$key = strtolower(trim($row['product_name']));
+			$products[$key] = array(
+				'price' => $row['product_price'],
+				'desc' => $row['product_desc']
+			);
+		}
+	}
+
+	$results->free();
+	$mysqli->close();
+
+	return json_encode($products);
 
 }
 
@@ -219,7 +248,7 @@ function popCustomersList() {
 	// Frees the memory associated with a result
 	$results->free();
 
-	// close connection 
+	// close connection
 	$mysqli->close();
 
 }
@@ -275,7 +304,7 @@ function getProducts() {
 	// Frees the memory associated with a result
 	$results->free();
 
-	// close connection 
+	// close connection
 	$mysqli->close();
 }
 
@@ -332,7 +361,7 @@ function getUsers() {
 	// Frees the memory associated with a result
 	$results->free();
 
-	// close connection 
+	// close connection
 	$mysqli->close();
 }
 
@@ -387,9 +416,8 @@ function getCustomers() {
 	// Frees the memory associated with a result
 	$results->free();
 
-	// close connection 
+	// close connection
 	$mysqli->close();
 }
 
 ?>
-

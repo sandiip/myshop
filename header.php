@@ -13,16 +13,20 @@
   <title>Invoice Management System</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
- 
+
+  <!-- Google Font: DM Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>body, h1, h2, h3, h4, h5, h6{ font-family: 'DM Sans', sans-serif; }</style>
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="css/AdminLTE.css">
- 
+
   <link rel="stylesheet" href="css/skin-green.css">
-  
+
   	<!-- JS -->
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="js/moment.js"></script>
@@ -32,7 +36,7 @@
 	<script src="js/bootstrap.datetime.js"></script>
 	<script src="js/bootstrap.password.js"></script>
 	<script src="js/scripts.js"></script>
-	
+
 	<!-- AdminLTE App -->
 	<script src="js/app.min.js"></script>
 
@@ -68,7 +72,7 @@
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-         
+
           <!-- User Account Menu -->
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
@@ -87,8 +91,8 @@
       </div>
     </nav>
   </header>
-  
-  
+
+
   <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
 
@@ -102,9 +106,9 @@
         <!-- Menu 0.1 -->
         <li class="treeview">
           <a href="dashboard.php"><i class="fa fa-tachometer"></i> <span>Dashboard</span>
-            
+
           </a>
-          
+
         </li>
         <!-- Menu 1 -->
          <li class="treeview">
@@ -143,7 +147,7 @@
             <li><a href="customer-list.php"><i class="fa fa-cog"></i>Manage Customers</a></li>
           </ul>
         </li>
-        
+
         <!-- Menu 4 -->
         <li class="treeview">
           <a href="#"><i class="fa fa-user"></i><span>System Users</span>
@@ -156,7 +160,7 @@
             <li><a href="user-list.php"><i class="fa fa-cog"></i>Manage Users</a></li>
           </ul>
         </li>
-        
+
       </ul>
       <!-- /.sidebar-menu -->
     </section>
@@ -165,11 +169,9 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-   
+
 
     <!-- Main content -->
     <section class="content">
 
       <!-- Your Page Content Here -->
-
-
