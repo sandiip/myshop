@@ -104,7 +104,7 @@ input.shipping {
 }
 
 .invoice_product_qty {
-  width: 50px;
+  width: 100%;
   text-align: center;
 }
 .invoice_type {
